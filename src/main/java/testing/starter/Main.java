@@ -38,13 +38,12 @@ class Main {
     Scanner sc = new Scanner(System.in);
     System.out.println(OPTIONS_MESSAGE);
     int option = sc.nextInt();
+    sc.nextLine();  // Clean scanner after next int
     while (option != END) {
       switch (option) {
         case CREATE:
           Patient newPatient = new Patient();
           System.out.println(CREATE_MESSAGE);
-
-          sc.nextLine();  // Clean scanner after next int
 
           String nombre_completo = sc.nextLine();
           String[] nombre_splitted = nombre_completo.split(" ");
@@ -67,7 +66,8 @@ class Main {
           break;
         }
         case SEARCH_LAST_NAME: {
-          String to_match = "Gonzales";
+          System.out.println(SEARCH_BY_LASTNAME_MESSAGE);
+          String to_match = sc.nextLine();
           Bundle response = client.search().forResource(Patient.class).where(Patient.FAMILY.matches().value(to_match)).returnBundle(Bundle.class).execute();
           if (response.getEntry().isEmpty()) {
             System.out.println("No patients matched " + to_match);
@@ -79,6 +79,7 @@ class Main {
       }
       System.out.println(OPTIONS_MESSAGE);
       option = sc.nextInt();
+      sc.nextLine();  // Clean scanner after next int
     }
   }
 
