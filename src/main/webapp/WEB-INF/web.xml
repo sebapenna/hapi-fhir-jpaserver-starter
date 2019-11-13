@@ -43,7 +43,8 @@
 
 	<servlet>
 		<servlet-name>fhirServlet</servlet-name>
-		<servlet-class>ca.uhn.fhir.jpa.starter.JpaRestfulServer</servlet-class>
+		<!--<servlet-class>ca.uhn.fhir.jpa.starter.JpaRestfulServer</servlet-class>-->
+		<servlet-class>testing.starter.RESTServer</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
