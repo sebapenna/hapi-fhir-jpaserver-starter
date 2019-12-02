@@ -10,6 +10,7 @@ import org.hl7.fhir.r4.model.Patient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PatientResourceProvider implements IResourceProvider {
 
@@ -25,7 +26,12 @@ public class PatientResourceProvider implements IResourceProvider {
   }
 
   @Read
-  public Patient getResourceById(@IdParam IIdType wanted_id) {
+  public Patient getResourceById(@IdParam IdType wanted_id) {
+    for (Patient patient : _patients) {
+      if (patient.getIdElement().getIdPart().compareTo(wanted_id.getIdPart()) == 0)
+        return patient;
+
+    }
     return new Patient();
   }
 
@@ -50,6 +56,15 @@ public class PatientResourceProvider implements IResourceProvider {
     List<Patient> matched_patients = new ArrayList<>();
     for (Patient patient : _patients)
       if (last_name.compareTo(patient.getName().get(0).getFamily()) == 0)
+        matched_patients.add(patient);
+    return matched_patients;
+  }
+
+  @Search
+  public List<Patient> getPatientByFirstName(@RequiredParam(name = Patient.SP_GIVEN) String first_name) {
+    List<Patient> matched_patients = new ArrayList<>();
+    for (Patient patient : _patients)
+      if (patient.getName().get(0).getGivenAsSingleString().contains(first_name))
         matched_patients.add(patient);
     return matched_patients;
   }

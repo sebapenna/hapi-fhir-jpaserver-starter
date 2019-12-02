@@ -22,13 +22,6 @@
     </prerequisites>
 
     <dependencies>
-        <!--MINE-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.16</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
