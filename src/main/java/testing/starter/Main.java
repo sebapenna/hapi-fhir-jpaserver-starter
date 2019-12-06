@@ -4,10 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.apache.commons.text.translate.NumericEntityUnescaper;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 
@@ -19,7 +16,9 @@ class Main {
     "1 - Buscar todos los Clientes;\n\t" +
     "2 - Buscar por Apellido\n\t" +
     "3 - Buscar por Nombre\n\t" +
-    "4 - Salir";
+    "4 - Imprimir ejemplo Patient\n\t" +
+    "5 - Imprimir ejemplo Practitioner\n\t" +
+    "6 - Salir";
 
   private static final String CREATE_MESSAGE = "Ingrese nombre, segundo nombre y apellido:";
   private static final String SEARCH_BY_LASTNAME_MESSAGE = "Ingrese apellido: ";
@@ -29,11 +28,13 @@ class Main {
   private static final int SEARCH_ALL = 1;
   private static final int SEARCH_LAST_NAME = 2;
   private static final int SEARCH_GIVEN_NAME = 3;
-  private static final int END = 4;
+  private static final int PRINT_EXAMPLE_PATIENT = 4;
+  private static final int PRINT_EXAMPLE_PRACTITIONER = 5;
+  private static final int END = 6;
 
   public static void main(String[] args) {
     FhirContext ctx = FhirContext.forR4();
-    Integer next_id = 0;
+    Integer nextId = 0;
     String serverBase = "http://localhost:8080/hapi-fhir-jpaserver/fhir/";
 //    String serverBase = "http://localhost:8080/";
 
@@ -41,8 +42,10 @@ class Main {
 
     Scanner sc = new Scanner(System.in);
     System.out.println(OPTIONS_MESSAGE);
+
     int option = sc.nextInt();
     sc.nextLine();  // Clean scanner after next int
+
     while (option != END) {
       switch (option) {
         case CREATE:
@@ -58,14 +61,16 @@ class Main {
           new_identifier.setValue("valor-del-identifier");
           newPatient.addIdentifier(new_identifier);
 
-          newPatient.setId((next_id++).toString());
+          newPatient.setId((nextId++).toString());
+
           IParser jsonParser = ctx.newJsonParser();
           jsonParser.setPrettyPrint(true);
-          String encoded = jsonParser.encodeResourceToString(newPatient);
-          System.out.println(encoded);
+          String patientAsJSON = jsonParser.encodeResourceToString(newPatient);
+          System.out.println(patientAsJSON);
 
           MethodOutcome outcome = client.create().resource(newPatient).prettyPrint().encodedJson().execute();
           System.out.println("Got ID: " + outcome.getId().toString());
+
           break;
         case SEARCH_ALL: {
           Bundle response = client.search().forResource(Patient.class).returnBundle(Bundle.class).execute();
