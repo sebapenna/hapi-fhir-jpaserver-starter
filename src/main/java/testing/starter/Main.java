@@ -48,30 +48,16 @@ class Main {
 
     while (option != END) {
       switch (option) {
-        case CREATE:
-          Patient newPatient = new Patient();
+        case CREATE: {
           System.out.println(CREATE_MESSAGE);
 
-          String nombre_completo = sc.nextLine();
-          String[] nombre_splitted = nombre_completo.split(" ");
-          newPatient.addName().setFamily(nombre_splitted[2]).addGiven(nombre_splitted[0]).addGiven(nombre_splitted[1]);
+          // Client must be inputted as: LASTNAME FIRSTNAME SECONDNAME
+          Patient newPatient = PatientFactory.create(sc.nextLine(), nextId++);
 
-          Identifier new_identifier = new Identifier();
-          new_identifier.getType().addCoding().setSystem("http://hl7.org/fhir/v2/0203/").setCode("PPN");
-          new_identifier.setValue("valor-del-identifier");
-          newPatient.addIdentifier(new_identifier);
-
-          newPatient.setId((nextId++).toString());
-
-          IParser jsonParser = ctx.newJsonParser();
-          jsonParser.setPrettyPrint(true);
-          String patientAsJSON = jsonParser.encodeResourceToString(newPatient);
-          System.out.println(patientAsJSON);
-
-          MethodOutcome outcome = client.create().resource(newPatient).prettyPrint().encodedJson().execute();
-          System.out.println("Got ID: " + outcome.getId().toString());
+          printPatient(ctx, client, newPatient);
 
           break;
+        }
         case SEARCH_ALL: {
           Bundle response = client.search().forResource(Patient.class).returnBundle(Bundle.class).execute();
           if (response.getEntry().isEmpty()) {
@@ -105,11 +91,30 @@ class Main {
             printResponseInformation(response);
           }
         }
+        case PRINT_EXAMPLE_PATIENT: {
+          // Client must be inputted as: LASTNAME FIRSTNAME SECONDNAME
+          Patient newPatient = PatientFactory.createExample();
+
+          printPatient(ctx, client, newPatient);
+        }
+        case PRINT_EXAMPLE_PRACTITIONER: {
+
+        }
       }
       System.out.println(OPTIONS_MESSAGE);
       option = sc.nextInt();
       sc.nextLine();  // Clean scanner after next int
     }
+  }
+
+  private static void printPatient(FhirContext ctx, IGenericClient client, Patient newPatient) {
+    IParser jsonParser = ctx.newJsonParser();
+    jsonParser.setPrettyPrint(true);
+    String patientAsJSON = jsonParser.encodeResourceToString(newPatient);
+    System.out.println(patientAsJSON);
+
+    MethodOutcome outcome = client.create().resource(newPatient).prettyPrint().encodedJson().execute();
+    System.out.println("Got ID: " + outcome.getId().toString());
   }
 
   private static void printResponseInformation(Bundle response) {
