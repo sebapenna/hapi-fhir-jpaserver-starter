@@ -78,7 +78,7 @@ public class PatientFactory {
     // Nationality
     newPatient.addExtension()
       .setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-citizenship")
-      .setValue(new StringType("Argentinian"));
+      .setValue(new CodeableConcept().addCoding().setCode("Argentinian"));
 
     // Contact phone
     ContactPoint telecom = newPatient.addTelecom();
