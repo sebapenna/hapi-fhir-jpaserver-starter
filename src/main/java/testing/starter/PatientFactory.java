@@ -1,8 +1,7 @@
 package testing.starter;
 
+import ca.uhn.fhir.model.dstu2.valueset.MaritalStatusCodesEnum;
 import org.hl7.fhir.r4.model.*;
-import org.hl7.fhir.r4.model.codesystems.ContactPointSystem;
-import org.hl7.fhir.r4.model.codesystems.V3MaritalStatus;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -34,9 +33,7 @@ public class PatientFactory {
 
   private static Identifier createDNI() {
     Identifier dni = new Identifier();
-    dni.setUse(Identifier.IdentifierUse.OFFICIAL);
-    dni.getType().addCoding().setSystem("http://www.renaper.gob.ar/dni").setCode("DNI");
-    dni.setValue("38125032");
+    dni.setUse(Identifier.IdentifierUse.OFFICIAL).setSystem("http://www.renaper.gob.ar/dni").setValue("38125032");
 
     // DNI: Archivo
     Extension dniFile = new Extension();
@@ -75,14 +72,13 @@ public class PatientFactory {
     // Marital Status
     Coding statusCoding = newPatient.getMaritalStatus().addCoding();
     statusCoding.setSystem("http://platform.lab-a.com.ar/fhir/StructureDefinition/practitioner-marital-status")
-      .setCode("S")
+      .setCode(MaritalStatusCodesEnum.S.getCode())
       .setDisplay("Single");
 
     // Nationality
-    Extension nationality = new Extension();
-    nationality.setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-citizenship")
-      .setValue(new StringType("Argentinian"))
-      .addExtension(nationality);
+    newPatient.addExtension()
+      .setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-citizenship")
+      .setValue(new StringType("Argentinian"));
 
     // Contact phone
     ContactPoint telecom = newPatient.addTelecom();
@@ -102,7 +98,7 @@ public class PatientFactory {
     addressLine.add(new StringType("1777"));
 
     // Mail
-    ContactPoint mail = newPatient.addTelecom();
+    ContactPoint mail = newPatient.addTelecom().setSystem(ContactPoint.ContactPointSystem.EMAIL);
     mail.setUse(ContactPoint.ContactPointUse.HOME);
     mail.setValue("divitoivan@gmail.com");
 
@@ -163,12 +159,13 @@ public class PatientFactory {
     // Healthcare
     Extension healthcare = newPatient.addExtension();
     healthcare.setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-healthcare-payer")
+      .addExtension().setUrl("provider")
       .setValue(new Reference().setReference("OSDE"));
     Extension healthcareIdentifier = healthcare.addExtension();
-    healthcareIdentifier.setUrl("identifier").setValue(new Identifier().setValue("1234123-asdc"));
-    healthcareIdentifier.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/identifier-image")
+    Identifier afiliado = new Identifier().setValue("1234123-asdc");
+    afiliado.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/identifier-image")
       .setValue(new Attachment().setUrl("https://cdn.lavoz.com.ar/sites/default/files/styles/width_1072/public/nota_periodistica/dni1_0.jpg"));
-
+    healthcareIdentifier.setUrl("identifier").setValue(afiliado);
     // Indications
     newPatient.addIdentifier().setSystem("http://platform.lab-a.com.ar/fhir/StructureDefinition/system-sc-indications")
       .setValue("123asd");

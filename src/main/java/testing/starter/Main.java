@@ -5,8 +5,8 @@ import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Practitioner;
 
 import java.util.Scanner;
 
@@ -90,15 +90,17 @@ class Main {
             System.out.println("Information about patients whose Name (First or Second) is: " + to_match);
             printResponseInformation(response);
           }
+          break;
         }
         case PRINT_EXAMPLE_PATIENT: {
-          // Client must be inputted as: LASTNAME FIRSTNAME SECONDNAME
           Patient newPatient = PatientFactory.createExample();
-
           printPatient(ctx, client, newPatient);
+          break;
         }
         case PRINT_EXAMPLE_PRACTITIONER: {
-
+          Practitioner newPractitioner = PractitionerFactory.createExample();
+          printPractitioner(ctx, client, newPractitioner);
+          break;
         }
       }
       System.out.println(OPTIONS_MESSAGE);
@@ -114,6 +116,16 @@ class Main {
     System.out.println(patientAsJSON);
 
     MethodOutcome outcome = client.create().resource(newPatient).prettyPrint().encodedJson().execute();
+    System.out.println("Got ID: " + outcome.getId().toString());
+  }
+
+  private static void printPractitioner(FhirContext ctx, IGenericClient client, Practitioner newPractitioner) {
+    IParser jsonParser = ctx.newJsonParser();
+    jsonParser.setPrettyPrint(true);
+    String PractitionerAsJSON = jsonParser.encodeResourceToString(newPractitioner);
+    System.out.println(PractitionerAsJSON);
+
+    MethodOutcome outcome = client.create().resource(newPractitioner).prettyPrint().encodedJson().execute();
     System.out.println("Got ID: " + outcome.getId().toString());
   }
 

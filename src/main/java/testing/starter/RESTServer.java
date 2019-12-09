@@ -29,6 +29,7 @@ public class RESTServer extends RestfulServer {
     /* Setting Resource Providers*/
     List<IResourceProvider> resourceProviders = new ArrayList<IResourceProvider>();
     resourceProviders.add(new PatientResourceProvider());
+    resourceProviders.add(new PractitionerResourceProvider());
     setResourceProviders(resourceProviders);
 
     /* Authomatic narratives for resources that don't have one */
