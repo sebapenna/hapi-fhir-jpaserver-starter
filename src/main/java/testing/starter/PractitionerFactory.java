@@ -192,6 +192,16 @@ public class PractitionerFactory {
     newPractitioner.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-tax-exception-certificate")
       .setValue(new Attachment().setUrl("https://cdn.lavoz.com.ar/sites/default/files/styles/width_1072/public/nota_periodistica/dni1_0.jpg"));
 
+    // Ultima entrevista
+    Extension interview = newPractitioner.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-work-interview");
+    Date date = new GregorianCalendar(2008, Calendar.JULY, 22).getTime();
+    interview.addExtension().setUrl("date").setValue(new DateType(date));
+    interview.addExtension().setUrl("result").setValue(new CodeableConcept().setText("no aceptado"));
+    interview.addExtension().setUrl("reason").setValue(new CodeableConcept().setText("no cumplia los requisitos"));
+
+    // Id federacion laba
+    newPractitioner.addIdentifier().setSystem("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-laba-identifier")
+      .setValue("abc123");
 
     return newPractitioner;
   }

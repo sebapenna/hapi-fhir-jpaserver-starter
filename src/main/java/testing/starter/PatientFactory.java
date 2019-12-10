@@ -182,6 +182,9 @@ public class PatientFactory {
     newPatient.addIdentifier().setSystem("http://platform.lab-a.com.ar/fhir/StructureDefinition/system-sc-datatech")
       .setAssigner(new Reference().setDisplay("RSC")).setValue("423sda");
 
+    // Id federacion laba
+    newPatient.addIdentifier().setSystem("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-laba-identifier")
+      .setValue("abc123");
 
     return newPatient;
   }
