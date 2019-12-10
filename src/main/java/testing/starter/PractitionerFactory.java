@@ -57,9 +57,11 @@ public class PractitionerFactory {
       .setValue(marital);
 
     // Nationality
+    CodeableConcept nationality = new CodeableConcept();
+    nationality.addCoding().setCode("Argentinian");
     newPractitioner.addExtension()
       .setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-citizenship")
-      .setValue(new CodeableConcept().addCoding().setCode("Argentinian"));
+      .setValue(nationality);
 
     // Contact phone
     ContactPoint telecom = newPractitioner.addTelecom();
@@ -89,6 +91,8 @@ public class PractitionerFactory {
 
     // Titulo
     Practitioner.PractitionerQualificationComponent titulo = newPractitioner.addQualification();
+    titulo.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/qualification-type")
+      .setValue(new Coding().setCode("degree"));
     titulo.getCode().addCoding().setCode("TO");
     titulo.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/qualification-name")
       .setValue(new StringType("Terapista Ocupacional"));
@@ -98,6 +102,8 @@ public class PractitionerFactory {
 
     // Especialidad
     Practitioner.PractitionerQualificationComponent especialidad = newPractitioner.addQualification();
+    especialidad.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/qualification-type")
+      .setValue(new Coding().setCode("speciality"));
     especialidad.getCode().addCoding().setCode("Rehab");
     especialidad.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/qualification-name")
       .setValue(new StringType("Especialista en rehabilitacion"));
@@ -107,6 +113,8 @@ public class PractitionerFactory {
 
     // Matricula
     Practitioner.PractitionerQualificationComponent matricula = newPractitioner.addQualification();
+    matricula.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/qualification-type")
+      .setValue(new Coding().setCode("registration"));
     matricula.getCode().addCoding().setCode("TO");
     Identifier matriculaIdentifier = matricula.addIdentifier();
     matriculaIdentifier.setValue("123456").addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/identifier-place")
@@ -160,9 +168,11 @@ public class PractitionerFactory {
     currentWork.addExtension().setUrl("direct-boss").setValue(new Reference().setDisplay("pepe"));
     currentWork.addExtension().setUrl("discharge-reason").setValue(new CodeableConcept().setText("Cambio de trabajo"));
 
+    Identifier vaccination = new Identifier();
+    vaccination.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/identifier-image")
+      .setValue(new Attachment().setUrl("https://cdn.lavoz.com.ar/sites/default/files/styles/width_1072/public/nota_periodistica/dni1_0.jpg"));
     newPractitioner.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-vaccination")
-      .setValue(new Identifier().addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/identifier-image")
-        .setValue(new Attachment().setUrl("https://cdn.lavoz.com.ar/sites/default/files/styles/width_1072/public/nota_periodistica/dni1_0.jpg")));
+      .setValue(vaccination);
 
     newPractitioner.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-curriculum-vitae")
       .setValue(new Attachment().setUrl("https://cdn.lavoz.com.ar/sites/default/files/styles/width_1072/public/nota_periodistica/dni1_0.jpg"));

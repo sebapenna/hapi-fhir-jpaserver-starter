@@ -46,6 +46,7 @@ public class PatientFactory {
     return dni;
   }
 
+
   public static Patient createExample() {
     Patient newPatient = new Patient();
 
@@ -76,9 +77,11 @@ public class PatientFactory {
       .setDisplay("Single");
 
     // Nationality
+    CodeableConcept nationality = new CodeableConcept();
+    nationality.addCoding().setCode("Argentinian");
     newPatient.addExtension()
       .setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-citizenship")
-      .setValue(new CodeableConcept().addCoding().setCode("Argentinian"));
+      .setValue(nationality);
 
     // Contact phone
     ContactPoint telecom = newPatient.addTelecom();
@@ -117,7 +120,7 @@ public class PatientFactory {
 
     Extension contactDNI = new Extension();
     contactDNI.setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-identifier");
-    contactDNI.setValue(createDNI());
+    contactDNI.setValue(new Identifier().setValue("38125032"));
 
     ContactPoint contactTelecom = newContact.addTelecom();
     contactTelecom.setSystem(ContactPoint.ContactPointSystem.PHONE)
@@ -146,10 +149,10 @@ public class PatientFactory {
       .setValue(new CodeableConcept().setText("Jefe de Area"));
 
     Address jobAddress = new Address();
-    contactAddress.setCity("calle falsa 123").setPostalCode("6789");
+    jobAddress.setCity("calle falsa 123").setPostalCode("6789");
     List<StringType> jobAddressLine = jobAddress.getLine();
     jobAddressLine.add(new StringType("calle falsa 123"));
-    newContact.setAddress(jobAddress);
+    contactCurrentWork.addExtension().setUrl("address").setValue(jobAddress);
 
     newContact.addTelecom().setSystem(ContactPoint.ContactPointSystem.PHONE)
       .setUse(ContactPoint.ContactPointUse.WORK).setValue("12344321");
@@ -174,7 +177,10 @@ public class PatientFactory {
       .setValue("321asd");
 
     newPatient.addIdentifier().setSystem("http://platform.lab-a.com.ar/fhir/StructureDefinition/system-sc-datatech")
-      .setAssigner(new Reference().setDisplay("AMENABAR")).setValue("312zsd"); // todo: verificar si setDisplay OK
+      .setAssigner(new Reference().setDisplay("AMENABAR")).setValue("312zsd");
+
+    newPatient.addIdentifier().setSystem("http://platform.lab-a.com.ar/fhir/StructureDefinition/system-sc-datatech")
+      .setAssigner(new Reference().setDisplay("RSC")).setValue("423sda");
 
 
     return newPatient;
