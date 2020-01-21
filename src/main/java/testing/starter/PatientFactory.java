@@ -84,8 +84,7 @@ public class PatientFactory {
       .setValue(nationality);
 
     // Contact phone
-    ContactPoint telecom = newPatient.addTelecom();
-    telecom.setSystem(ContactPoint.ContactPointSystem.PHONE)
+    newPatient.addTelecom().setSystem(ContactPoint.ContactPointSystem.PHONE)
       .setUse(ContactPoint.ContactPointUse.HOME)
       .setValueElement(new StringType("12341234"));
 
@@ -101,9 +100,9 @@ public class PatientFactory {
     addressLine.add(new StringType("1777"));
 
     // Mail
-    ContactPoint mail = newPatient.addTelecom().setSystem(ContactPoint.ContactPointSystem.EMAIL);
-    mail.setUse(ContactPoint.ContactPointUse.HOME);
-    mail.setValue("divitoivan@gmail.com");
+    newPatient.addTelecom().setSystem(ContactPoint.ContactPointSystem.EMAIL)
+      .setUse(ContactPoint.ContactPointUse.HOME)
+      .setValue("divitoivan@gmail.com");
 
     Date deathDate = new GregorianCalendar(2018, Calendar.MARCH, 30).getTime();
     newPatient.setDeceased(new DateTimeType(deathDate));
@@ -113,22 +112,21 @@ public class PatientFactory {
     newContact.getName().setUse(HumanName.NameUse.OFFICIAL).setFamily("pepe").addGiven("pepe");
     newContact.addRelationship().setText("padre");
 
-    Extension contactBirthdate = new Extension();
-    contactBirthdate.setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-birthdate")
+    // Birthday contacto
+    newContact.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-birthdate")
       .setValue(new DateType(birthdate));
-    newContact.addExtension(contactBirthdate);
 
-    Extension contactDNI = new Extension();
-    contactDNI.setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-identifier");
-    contactDNI.setValue(new Identifier().setValue("38125032"));
+    // DNI contacto
+    newContact.addExtension().setUrl("http://platform.lab-a.com.ar/fhir/StructureDefinition/person-identifier")
+      .setValue(new Identifier().setValue("38125032"));
 
-    ContactPoint contactTelecom = newContact.addTelecom();
-    contactTelecom.setSystem(ContactPoint.ContactPointSystem.PHONE)
+    // Phone contacto
+    newContact.addTelecom().setSystem(ContactPoint.ContactPointSystem.PHONE)
       .setUse(ContactPoint.ContactPointUse.HOME)
       .setValueElement(new StringType("12341234"));
 
-    ContactPoint contactMail = newContact.addTelecom();
-    contactMail.setUse(ContactPoint.ContactPointUse.HOME).setValue("dasd@das.com");
+    // Mail contacto
+    newContact.addTelecom().setUse(ContactPoint.ContactPointUse.HOME).setValue("dasd@das.com");
 
     Address contactAddress = new Address();
     contactAddress.setCity("ciudad de buenos aires").setPostalCode("1234");
