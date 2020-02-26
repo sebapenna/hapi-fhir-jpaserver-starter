@@ -186,7 +186,7 @@ public class JpaRestfulServer extends RestfulServer {
      */
     String serverAddress = HapiProperties.getServerAddress();
     if (serverAddress != null && serverAddress.length() > 0) {
-      setServerAddressStrategy(new HardcodedServerAddressStrategy(serverAddress));
+      setServerAddressStrategy(new HardcodedServerAddressStrategy("http://localhost:8081/fhir"));
     }
 
     /*
